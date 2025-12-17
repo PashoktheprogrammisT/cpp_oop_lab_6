@@ -143,6 +143,22 @@ TEST(DungeonTest, SaveAndLoadFile) {
     std::remove(filename.c_str());
 }
 
+TEST(DungeonTest, BattleRemovesDeadNPCs) {
+    Dungeon dungeon;
+    
+    dungeon.addNPC(NPCFactory::createNPC("Bear", "Bear1", 0, 0));
+    dungeon.addNPC(NPCFactory::createNPC("Desman", "Desman1", 5, 5));
+    dungeon.addNPC(NPCFactory::createNPC("Bittern", "Bittern1", 100, 100));
+    
+    auto observer = std::make_shared<ConsoleObserver>();
+    testing::internal::CaptureStdout();
+    dungeon.battle(10.0, observer);
+    std::string output = testing::internal::GetCapturedStdout();
+    
+    EXPECT_NE(output.find("Bear1 killed Desman1"), std::string::npos);
+    EXPECT_NE(output.find("Desman1 killed Bear1"), std::string::npos);
+}
+
 TEST(ObserverTest, ConsoleObserver) {
     testing::internal::CaptureStdout();
     
@@ -202,15 +218,16 @@ TEST(ObserverTest, CompositeObserver) {
 
 TEST(BattleVisitorTest, BattleLogic) {
     auto observer = std::make_shared<ConsoleObserver>();
+    std::vector<std::shared_ptr<NPC>> deadNPCs;
     BattleVisitor visitor;
     
     auto bear = NPCFactory::createNPC("Bear", "Bear", 0, 0);
     auto desman = NPCFactory::createNPC("Desman", "Desman", 0, 0);
     auto bittern = NPCFactory::createNPC("Bittern", "Bittern", 0, 0);
     
-    EXPECT_NO_THROW(visitor.visit(bear, desman, observer));
-    EXPECT_NO_THROW(visitor.visit(bear, bittern, observer));
-    EXPECT_NO_THROW(visitor.visit(desman, bittern, observer));
+    EXPECT_NO_THROW(visitor.visit(bear, desman, observer, deadNPCs));
+    EXPECT_NO_THROW(visitor.visit(bear, bittern, observer, deadNPCs));
+    EXPECT_NO_THROW(visitor.visit(desman, bittern, observer, deadNPCs));
 }
 
 TEST(IntegrationTest, FullBattleScenario) {
