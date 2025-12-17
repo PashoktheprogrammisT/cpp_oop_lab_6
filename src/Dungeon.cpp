@@ -43,7 +43,14 @@ void Dungeon::battle(double range, std::shared_ptr<BattleObserver> observer) {
     for (size_t i = 0; i < npcs.size(); ++i) {
         for (size_t j = i + 1; j < npcs.size(); ++j) {
             if (npcs[i] && npcs[j] && npcs[i]->distanceTo(*npcs[j]) <= range) {
-                npcs[i]->accept(visitor, npcs[j], observer);
+                std::vector<std::shared_ptr<NPC>> tempDeadNPCs;
+                visitor.visit(npcs[i], npcs[j], observer, tempDeadNPCs);
+                
+                for (auto& dead : tempDeadNPCs) {
+                    if (std::find(deadNPCs.begin(), deadNPCs.end(), dead) == deadNPCs.end()) {
+                        deadNPCs.push_back(dead);
+                    }
+                }
             }
         }
     }
