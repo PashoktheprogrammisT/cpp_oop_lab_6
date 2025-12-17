@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <vector>
 
 class BattleVisitor;
 class BattleObserver;
@@ -20,5 +21,6 @@ public:
     double distanceTo(const NPC& other) const;
 
     virtual bool canAttack(const NPC& other) const = 0;
-    virtual void accept(BattleVisitor& visitor, std::shared_ptr<NPC> attacker, std::shared_ptr<BattleObserver> observer) = 0;
+    virtual void accept(BattleVisitor& visitor, std::shared_ptr<NPC> attacker, 
+                        std::shared_ptr<BattleObserver> observer) = 0;
 };
