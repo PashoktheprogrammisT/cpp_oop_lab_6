@@ -15,9 +15,11 @@ public:
     bool canAttack(const NPC& other) const override {
         return other.getType() != "Bear";
     }
-    void accept(BattleVisitor& visitor, std::shared_ptr<NPC> attacker, std::shared_ptr<BattleObserver> observer) override {
+    void accept(BattleVisitor& visitor, std::shared_ptr<NPC> attacker, 
+                std::shared_ptr<BattleObserver> observer) override {
         std::shared_ptr<NPC> self = std::make_shared<Bear>(*this);
-        visitor.visit(self, attacker, observer);
+        std::vector<std::shared_ptr<NPC>> dummyDeadNPCs;
+        visitor.visit(self, attacker, observer, dummyDeadNPCs);
     }
 };
 
@@ -28,9 +30,11 @@ public:
     bool canAttack(const NPC& other) const override {
         return false;
     }
-    void accept(BattleVisitor& visitor, std::shared_ptr<NPC> attacker, std::shared_ptr<BattleObserver> observer) override {
+    void accept(BattleVisitor& visitor, std::shared_ptr<NPC> attacker, 
+                std::shared_ptr<BattleObserver> observer) override {
         std::shared_ptr<NPC> self = std::make_shared<Bittern>(*this);
-        visitor.visit(self, attacker, observer);
+        std::vector<std::shared_ptr<NPC>> dummyDeadNPCs;
+        visitor.visit(self, attacker, observer, dummyDeadNPCs);
     }
 };
 
@@ -41,9 +45,11 @@ public:
     bool canAttack(const NPC& other) const override {
         return other.getType() == "Bear";
     }
-    void accept(BattleVisitor& visitor, std::shared_ptr<NPC> attacker, std::shared_ptr<BattleObserver> observer) override {
+    void accept(BattleVisitor& visitor, std::shared_ptr<NPC> attacker, 
+                std::shared_ptr<BattleObserver> observer) override {
         std::shared_ptr<NPC> self = std::make_shared<Desman>(*this);
-        visitor.visit(self, attacker, observer);
+        std::vector<std::shared_ptr<NPC>> dummyDeadNPCs;
+        visitor.visit(self, attacker, observer, dummyDeadNPCs);
     }
 };
 
